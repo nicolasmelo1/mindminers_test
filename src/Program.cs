@@ -1,4 +1,4 @@
-﻿using SubtitleClient;
+﻿using SSync;
 
 public static class Program 
 {

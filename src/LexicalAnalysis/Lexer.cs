@@ -1,6 +1,7 @@
 namespace SSync.LexicalAnalysis {
     public class Lexer {
         private string[] _subtitle = {};
+        private int _currentOrder = 0;
         private int _currentPosition = 0;
 
         public Lexer(string[] subtitle) {
@@ -27,7 +28,6 @@ namespace SSync.LexicalAnalysis {
             int counter = 0;
             string subtitle = "";
             string? timestamp = "";
-            string? order = "";
 
             while (isNextCharacterDifferentFrom("", counter)) 
             {
@@ -36,7 +36,6 @@ namespace SSync.LexicalAnalysis {
                 switch (counter) 
                 {
                     case 0:
-                        order = character;
                         break;
                     case 1:
                         timestamp = character;
@@ -47,9 +46,9 @@ namespace SSync.LexicalAnalysis {
                 }
                 counter++;
             }
-
+            _currentOrder++;
             _currentPosition += counter + 1;
-            return new Token(timestamp, order, subtitle);
+            return new Token(timestamp, _currentOrder, subtitle);
         }
 
         public Token? getNextTokenOrNull() 

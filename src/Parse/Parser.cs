@@ -2,7 +2,7 @@ using SSync.LexicalAnalysis;
 
 namespace SSync.Parse {
     public class Parser {
-        private Lexer? _lexer = null;
+        private Lexer _lexer;
         private Snippet? _rootSnippet = null;
         private Token? _currentToken = null;
 
@@ -27,6 +27,11 @@ namespace SSync.Parse {
             if (token == null) return null;
             
             return new Snippet(token, this);
+        }
+
+        public Snippet? getRootSnippet()
+        {
+            return _rootSnippet;
         }
     }
 }

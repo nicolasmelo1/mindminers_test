@@ -14,23 +14,22 @@ namespace SSync.Tests.CommandLine
             Assert.Equal(0, args.minutesOffset);
             Assert.Equal(0, args.secondsOffset);
             Assert.Equal(0, args.millisecondsOffset);
-            Assert.Null(args.replacements);
+            Assert.Equal(new string[][] {}, args.getReplacements());
         }
 
         [Fact]
         public void creation_with_replacements() 
         {
             var args = new CommandLineArguments("subtitles.srt");
-            args.replacements = new string[][] { new string[] { "a", "b" }, new string[] { "c", "d" } };
+            args.addReplacement(new string[] { "a", "b" });
             Assert.Equal("subtitles.srt", args.inputFileName);
             Assert.Equal("output.srt", args.outputFileName);
             Assert.Equal(0, args.hoursOffset);
             Assert.Equal(0, args.minutesOffset);
             Assert.Equal(0, args.secondsOffset);
             Assert.Equal(0, args.millisecondsOffset);
-            Assert.NotNull(args.replacements);
-            Assert.Equal(2, args.replacements.Length);
-            Assert.Equal("b", args.replacements[0][1]);
+            Assert.Equal(1, args.getReplacements().Length);
+            Assert.Equal("b", args.getReplacements()[0][1]);
         }
 
         [Fact]
@@ -52,7 +51,7 @@ namespace SSync.Tests.CommandLine
             var args = parser.getArgs();
             Assert.Equal("subtitles.srt", args.inputFileName);
             Assert.Equal("output.srt", args.outputFileName);
-            Assert.Null(args.replacements);
+            Assert.Equal(new string[][] {}, args.getReplacements());
         }
 
         [Fact]
@@ -60,7 +59,7 @@ namespace SSync.Tests.CommandLine
         {
             var parser = new CLParser(new string[] { "subtitles.srt", "--output", "output.srt", "--replacements", "a:b" });
             var args = parser.getArgs();
-            Assert.Equal(new string[][] { new string[] { "a", "b" } }, args.replacements);
+            Assert.Equal(new string[][] { new string[] { "a", "b" } }, args.getReplacements());
         }
 
         [Fact]

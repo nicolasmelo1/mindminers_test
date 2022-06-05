@@ -130,6 +130,22 @@ namespace SSync.Parse
         }
 
         /// <summary>
+        /// Retrieve the subtitle text as a string removing the newline as the last character of the string
+        /// and replacing the replacements with the given values.
+        /// </summary>
+        /// <param name="replacements">The replacements to use in the subtitle text.</param>
+        private string _getSubtitleStringRepresentation(IDictionary<string, string>? replacements=null)
+        {
+            bool isLastCharacterOfTheSubtitleANewLine = subtitle[subtitle.Length - 1] == '\n';
+            string newSubtitle = isLastCharacterOfTheSubtitleANewLine ? subtitle.Substring(0, subtitle.Length - 1) : subtitle;
+            foreach (KeyValuePair<string, string> replacement in replacements ?? new Dictionary<string, string>())
+            {
+                newSubtitle = newSubtitle.Replace(replacement.Key, replacement.Value);
+            }
+            return newSubtitle;
+        }
+        
+        /// <summary>
         /// Retrieve the snippet as a string representation instead of a class instance. This is what we will use
         /// if we want to generate a new subtitles file.
         /// It recieves all of the changes that you want to make to this subtitle and applies them.
@@ -155,13 +171,7 @@ namespace SSync.Parse
         {
             string newTimestamp = $"{timestamps.start.getStringRespresentation(offsetInMilliseconds)}" + 
                 $" --> {timestamps.end.getStringRespresentation(offsetInMilliseconds)}";
-            bool isLastCharacterOfTheSubtitleANewLine = subtitle[subtitle.Length - 1] == '\n';
-            string newSubtitle = isLastCharacterOfTheSubtitleANewLine ? subtitle.Substring(0, subtitle.Length - 1) : subtitle;
-            foreach (KeyValuePair<string, string> replacement in replacements ?? new Dictionary<string, string>())
-            {
-                newSubtitle = newSubtitle.Replace(replacement.Key, replacement.Value);
-            }
-
+            string newSubtitle = _getSubtitleStringRepresentation(replacements);
             return $"{order}\n{newTimestamp}\n{newSubtitle}\n";
         }
 

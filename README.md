@@ -52,8 +52,24 @@ or
 $ cd ./SSync
 $ dotnet run "../subtitle.srt" --o "../changes-test.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
 ```
+or
+```bash
+$ dotnet run --project ./SSync "subtitle.srt" --output "changes-test.srt" --seconds -10 --replacements "nQo":"não" --replacements "NQo":"Não"  
+```
 
 This will read the `subtitle.srt` file and output the changes to `changes-test.srt` file. It will subtract 10 seconds from the timestamps and replace "nQo" occurrences to "não" and "NQo" to "Não".
+
+
+*Obrigatory parameters:* 
+- `inputFileName`: This is the first argument, can be the full path or the file only.
+
+*Optional parameters:*
+- `--output` or `--o`: The path or just the name of the output file. Defaults to 'output.srt'
+- `--hours` or `--h`: The offset in hours. Defaults to 0.
+- `--minutes` or `--m`: The offset in minutes. Defaults to 0.
+- `--seconds` or `--s`: The offset in seconds. Defaults to 0.
+- `--milliseconds` or `--ms`: The offset in milliseconds. Defaults to 0.
+- `--replacements` or `--r`: The substitutions/replacements to be done in the subtitle. Can be repeated N times.
 
 
 *Important*: Tested on netcore 6 and a macbook. Haven't tested on Windows or Linux machines, but i'm almost sure it will work.

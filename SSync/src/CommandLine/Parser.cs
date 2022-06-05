@@ -23,10 +23,21 @@ namespace SSync.CommandLine
         public long secondsOffset = 0;
         public long millisecondsOffset = 0;
 
-        public string[][]? replacements = null;
+        private List<string[]> _replacements = new List<string[]>();
+
         public CommandLineArguments(string inputFileName)
         {
             this.inputFileName = inputFileName;
+        }
+
+        public void addReplacement(string[] replacement)
+        {
+            _replacements.Add(replacement);
+        }
+
+        public string[][] getReplacements()
+        {
+            return _replacements.ToArray();
         }
     }
 
@@ -39,10 +50,13 @@ namespace SSync.CommandLine
     {
         private CommandLineArguments _args;
         private string[] _validOutputFileArguments = { "--output", "--o" };
-        private string[] _validHoursOffsetArguments = { "--hours", "--h" };
-        private string[] _validMinutesOffsetArguments = { "--minutes", "--m" };
-        private string[] _validSecondsOffsetArguments = { "--seconds", "--s" };
-        private string[] _validMillisecondsOffsetArguments = { "--milliseconds", "--ms" };
+        private IDictionary<string, string[]> _validOffsetArguments = new Dictionary<string, string[]>()
+        {
+            { "hours", new string[] { "--hours", "--h" } },
+            { "minutes", new string[] { "--minutes", "--m" } },
+            { "seconds", new string[] { "--seconds", "--s" } },
+            { "milliseconds", new string[] { "--milliseconds", "--ms" } }
+        };
         private string[] _validReplacementsArguments = { "--replacements", "--r" };
 
         /// <summary>
@@ -94,45 +108,62 @@ namespace SSync.CommandLine
             CommandLineArguments commandLineArguments = new CommandLineArguments(inputFileName);
             for (int i = 1; i < args.Length; i++)
             {
-                if (_validOutputFileArguments.Contains(args[i]))
+                handleOutputFileName(commandLineArguments, args, i);
+                handleOffsetTypes(commandLineArguments, args, i, "hours", "--h 2");
+                handleOffsetTypes(commandLineArguments, args, i, "minutes", "--m 3");
+                handleOffsetTypes(commandLineArguments, args, i, "seconds", "--s 5");
+                handleOffsetTypes(commandLineArguments, args, i, "milliseconds", "--ms -25");
+                handleReplacements(commandLineArguments, args, i);
+            }
+            return commandLineArguments;
+        }
+
+        private void handleOutputFileName(CommandLineArguments commandLineArguments, string[] args, int index)
+        {
+            if (_validOutputFileArguments.Contains(args[index]))
+            {
+                if (index + 1 >= args.Length) throw new InvalidParameterException("--o \"newsubtitles.srt\"");
+                commandLineArguments.outputFileName = args[index + 1];
+            }
+        }
+
+        private void handleOffsetTypes(CommandLineArguments commandLineArguments, string[] args, int index, 
+            string offsetType, string exceptionExample)
+        {
+            if (_validOffsetArguments[offsetType].Contains(args[index])) 
+            {
+                if (index + 1 >= args.Length) throw new InvalidParameterException(exceptionExample);
+                long offset = 0;
+                Int64.TryParse(args[index + 1], out offset);
+                
+                switch (offsetType)
                 {
-                    if (i + 1 >= args.Length) throw new InvalidParameterException("--o \"newsubtitles.srt\"");
-                    commandLineArguments.outputFileName = args[i + 1];
-                }
-                else if (_validReplacementsArguments.Contains(args[i]))
-                {
-                    if (i + 1 >= args.Length) throw new InvalidParameterException("--s \"nQo\":\"não\"");
-                    string replacementsString = args[i + 1];
-                    string[] replacementsArray = replacementsString.Split(':');
-                    if (replacementsArray.Length != 2) throw new InvalidParameterException("--s \"nQo\":\"não\"");
-                    replacements.Add(replacementsArray);
-                } 
-                else if (_validHoursOffsetArguments.Contains(args[i])) 
-                {
-                    if (i + 1 >= args.Length) throw new InvalidParameterException("--h 2");
-                    Int64.TryParse(args[i + 1], out commandLineArguments.hoursOffset);
-                } 
-                else if (_validMinutesOffsetArguments.Contains(args[i])) 
-                {
-                    if (i + 1 >= args.Length) throw new InvalidParameterException("--m 5");
-                    Int64.TryParse(args[i + 1], out commandLineArguments.minutesOffset);
-                }
-                else if (_validSecondsOffsetArguments.Contains(args[i])) 
-                {
-                    if (i + 1 >= args.Length) throw new InvalidParameterException("--s 10");
-                    Int64.TryParse(args[i + 1], out commandLineArguments.secondsOffset);
-                }
-                else if (_validMillisecondsOffsetArguments.Contains(args[i])) 
-                {
-                    if (i + 1 >= args.Length) throw new InvalidParameterException("--ms 25");
-                    Int64.TryParse(args[i + 1], out commandLineArguments.millisecondsOffset);
+                    case "hours":
+                        commandLineArguments.hoursOffset = offset;
+                        break;
+                    case "minutes":
+                        commandLineArguments.minutesOffset = offset;
+                        break;
+                    case "seconds":
+                        commandLineArguments.secondsOffset = offset;
+                        break;
+                    default:
+                        commandLineArguments.millisecondsOffset = offset;
+                        break;
                 }
             }
+        }
 
-            string[][] replacementsAsArray = replacements.ToArray();
-            if (replacementsAsArray.Length > 0) commandLineArguments.replacements = replacementsAsArray;
-
-            return commandLineArguments;
+        private void handleReplacements(CommandLineArguments commandLineArguments, string[] args, int index)
+        {
+            if (_validReplacementsArguments.Contains(args[index]))
+            {
+                if (index + 1 >= args.Length) throw new InvalidParameterException("--r \"nQo\":\"não\"");
+                string replacementsString = args[index + 1];
+                string[] replacementsArray = replacementsString.Split(':');
+                if (replacementsArray.Length != 2) throw new InvalidParameterException("--r \"nQo\":\"não\"");
+                commandLineArguments.addReplacement(replacementsArray);
+            }
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ public static class Program
             minutesOffset: commandLineArgs.minutesOffset,
             secondsOffset: commandLineArgs.secondsOffset,
             millisecondsOffset: commandLineArgs.millisecondsOffset,
-            replacements: commandLineArgs.replacements
+            replacements: commandLineArgs.getReplacements()
         );
         client.saveFile(commandLineArgs.outputFileName);
     }

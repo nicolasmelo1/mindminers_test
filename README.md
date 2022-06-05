@@ -69,7 +69,7 @@ This will read the `subtitle.srt` file and output the changes to `changes-test.s
 - `--minutes` or `--m`: The offset in minutes. Defaults to 0.
 - `--seconds` or `--s`: The offset in seconds. Defaults to 0.
 - `--milliseconds` or `--ms`: The offset in milliseconds. Defaults to 0.
-- `--replacements` or `--r`: The substitutions/replacements to be done in the subtitle. Can be repeated N times. The structure is "valueToBeReplacedInSubtitle":"valueToBeReplacedWith"
+- `--replacements` or `--r`: The substitutions/replacements to be done in the subtitle. Can be repeated N times. The structure is "valueToBeReplacedInSubtitle":"valueToBeReplacedWith".
 
 
 *Important*: Tested on netcore 6 and a macbook. Haven't tested on Windows or Linux machines, but i'm almost sure it will work.

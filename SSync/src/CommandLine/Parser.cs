@@ -144,5 +144,4 @@ namespace SSync.CommandLine
             return _args;
         }
     }
-    
 }

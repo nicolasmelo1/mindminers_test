@@ -5,6 +5,7 @@ The SubRip (.srt) format of subtitle files for movies has become quite popular i
 Here is a brief explanation of the format: It contain formatted lines of plain text in groups separated by a blank line. The subtitles are numbered sequentially, starting at 1. The timecode used is hours:minutes:seconds, milliseconds with time units fixed to two digits with leading zero padding, and fractions fixed to three digits also padded by leading zeros (00:00:00,000). The fractional separator used is the comma, as the program was written in France.
 
 ##### Example
+
 > > 168 
 > > 00:20:41,150 --> 00:20:45,109 
 > > - How did he do that? 
@@ -44,8 +45,15 @@ foreach(string file in subtitleFiles)
 #### CLI
 
 ```bash
-$ dotnet run "subtitle.srt" --o "changes-test.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
+$ dotnet run --project ./SSync "subtitle.srt" --o "changes-test.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
+```
+or
+```bash
+$ cd ./SSync
+$ dotnet run "../subtitle.srt" --o "../changes-test.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
 ```
 
 This will read the `subtitle.srt` file and output the changes to `changes-test.srt` file. It will subtract 10 seconds from the timestamps and replace "nQo" occurrences to "não" and "NQo" to "Não".
 
+
+*Important*: Tested on netcore 6 and a macbook. Haven't tested on Windows or Linux machines, but i'm almost sure it will work.

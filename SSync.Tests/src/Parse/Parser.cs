@@ -42,6 +42,8 @@ namespace SSync.Tests.Parse
             Assert.Equal("Não me lembro de ter\n", snippet?.subtitle);
             snippet = parser.getNextSnippet();
             Assert.Equal("Está chateado porque as\ngarçonetes mexeram com você?\n", snippet?.subtitle);
+            snippet = parser.getNextSnippet();
+            Assert.Null(snippet);
         }
     }
 }

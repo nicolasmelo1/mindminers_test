@@ -1,4 +1,5 @@
 using SSync.Parse;
+using SSync.CommandLine;
 
 namespace SSync 
 {
@@ -117,7 +118,7 @@ namespace SSync
         /// root snippet of the subtitle so we can interact with it.
         /// <example>
         ///     <code>
-        ///         var client = new Client();
+        ///         var client = new SSyncClient();
         ///         client.loadFile("subtitles.srt");
         ///         client.loadFile("C://usercomputer/subtitles/gots1E1.srt");
         ///     </code>
@@ -138,10 +139,10 @@ namespace SSync
         /// try to make both APIs as similar as possible.
         /// <example>
         ///     <code>
-        ///         var client = new Client();
+        ///         var client = new SSyncClient();
         ///         client.loadFile("subtitles.srt");
-        ///         strings[][] replacements = new strings[][] {
-        ///             new strings[] { "nQo", "não" }
+        ///         string[][] replacements = new string[][] {
+        ///             new string[] { "nQo", "não" }
         ///         };
         ///         client.applyChanges(hoursOffset: 1, minutesOffset: 2, secondsOffset: 3, millisecondsOffset: 4, replacements: replacements);
         ///         client.saveFile("output.srt");
@@ -170,10 +171,10 @@ namespace SSync
         /// snippets in the subtitle.
         /// <example>
         ///     <code>
-        ///         var client = new Client();
+        ///         var client = new SSyncClient();
         ///         client.loadFile("subtitles.srt");
-        ///         strings[][] replacements = new strings[][] {
-        ///             new strings[] { "nQo", "não" }
+        ///         string[][] replacements = new string[][] {
+        ///             new string[] { "nQo", "não" }
         ///         };
         ///         client.applyChanges(hoursOffset: 1, minutesOffset: 2, secondsOffset: 3, millisecondsOffset: 4, replacements: replacements);
         ///         client.saveFile("output.srt");
@@ -197,6 +198,28 @@ namespace SSync
                 nextSnippet = nextSnippet.getNext();
             }
             System.IO.File.WriteAllLines(fileName, lines.ToArray());
+        }
+
+        /// <summary>
+        /// This method is called when we want to run the client as a CLI program instead of a library.
+        /// It recieves the arguments from the cli, parses it and then calls the `loadFile`, `applyChanges` 
+        /// and `saveFile` methods in this exact order.
+        /// </summary>
+        /// <param name="args">The arguments from the command line</param>
+        public void runAsCLI(string[] args) 
+        {
+            CLParser commandLineArgsParser = new CLParser(args);
+            CommandLineArguments commandLineArgs = commandLineArgsParser.getArgs();
+
+            loadFile(commandLineArgs.inputFileName);
+            applyChanges(
+                hoursOffset: commandLineArgs.hoursOffset,
+                minutesOffset: commandLineArgs.minutesOffset,
+                secondsOffset: commandLineArgs.secondsOffset,
+                millisecondsOffset: commandLineArgs.millisecondsOffset,
+                replacements: commandLineArgs.getReplacements()
+            );
+            saveFile(commandLineArgs.outputFileName);
         }
     }
 }

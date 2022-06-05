@@ -154,6 +154,12 @@ namespace SSync.CommandLine
             }
         }
 
+        /// <summary>
+        /// Handles the replacements arguments. Since the replacements can be repeated an N number of times we will append
+        /// the replacements one by one to a list inside of the <see cref="CommandLineArguments"/> object.
+        /// 
+        /// It should follow the following format: stringThatYouWantToReplace:stringThatYouWantToReplaceWith
+        /// </summary>
         private void handleReplacements(CommandLineArguments commandLineArguments, string[] args, int index)
         {
             if (_validReplacementsArguments.Contains(args[index]))

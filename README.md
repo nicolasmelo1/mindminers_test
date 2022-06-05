@@ -7,9 +7,9 @@ Here is a brief explanation of the format: It contain formatted lines of plain t
 ##### Example
 
 > > 168 
-> > 00:20:41,150 --> 00:20:45,109 
-> > - How did he do that? 
-> > - Made him an offer he couldn't refuse.
+00:20:41,150 --> 00:20:45,109 
+- How did he do that? 
+- Made him an offer he couldn't refuse.
 
 ### Motivation
 A Common problem users face with this format are the following:

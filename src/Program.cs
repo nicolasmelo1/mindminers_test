@@ -6,9 +6,9 @@ public static class Program
     public static void Main(string[] args) 
     {
         CLParser commandLineArgsParser = new CLParser(args);
-        CommandLineArguments commandLineArgs = commandLineArgsParser.args;
+        CommandLineArguments commandLineArgs = commandLineArgsParser.getArgs();
 
-        Client client = new Client();
+        SSyncClient client = new SSyncClient();
         client.loadFile(commandLineArgs.inputFileName);
         client.applyChanges(
             hoursOffset: commandLineArgs.hoursOffset,

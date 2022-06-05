@@ -10,6 +10,10 @@ namespace SSync.CommandLine
         public InvalidParameterException(string example) : base($"The parameter is either incomplete or incorrect. Example: {example}") { }
     }
 
+    /// <summary>
+    /// This class is used to structure the command line arguments while also giving default values to non passed arguments.
+    /// Only the input file is required, the others are optional.
+    /// </summary>
     public class CommandLineArguments
     {
         public string inputFileName;
@@ -25,20 +29,61 @@ namespace SSync.CommandLine
             this.inputFileName = inputFileName;
         }
     }
+
+    /// <summary>
+    /// This class is used for parsing the command line arguments so we can use this as a CLI program not only 
+    /// as a library. This returns all of the arguments as a <see cref="CommandLineArguments"/> object which is structured 
+    /// for our needs.
+    /// </summary>
     public class CLParser 
     {
-        public CommandLineArguments args;
+        private CommandLineArguments _args;
         private string[] _validOutputFileArguments = { "--output", "--o" };
         private string[] _validHoursOffsetArguments = { "--hours", "--h" };
         private string[] _validMinutesOffsetArguments = { "--minutes", "--m" };
         private string[] _validSecondsOffsetArguments = { "--seconds", "--s" };
         private string[] _validMillisecondsOffsetArguments = { "--milliseconds", "--ms" };
         private string[] _validReplacementsArguments = { "--replacements", "--r" };
+
+        /// <summary>
+        /// Creates a new CLParser object with the given arguments formatted.
+        /// Only the input file is required, the others are optional.
+        /// <example>
+        ///     <code>
+        ///     string[] args = { 
+        ///         "subtitles.srt", 
+        ///         "--output", 
+        ///         "output.srt", 
+        ///         "--hours", 
+        ///         "1", 
+        ///         "--minutes", 
+        ///         "2", 
+        ///         "--seconds", 
+        ///         "3", 
+        ///         "--milliseconds", 
+        ///         "4", 
+        ///         "--replacements", 
+        ///         "a:b" 
+        ///     };
+        ///     CLParser parser = new CLParser(args);
+        ///     CommandLineArguments arguments = parser.getArgs();
+        ///     Console.WriteLine(arguments.inputFileName) // "subtitles.srt";
+        ///     </code>
+        /// </summary>
+        /// <param name="args">The arguments to parse.</param>
         public CLParser(string[] args) 
         {
-            this.args = this.formatArgs(args);
+            _args = this.formatArgs(args);
         }
 
+        /// <summary>
+        /// Loops through the given arguments and structures them into a <see cref="CommandLineArguments"/> object.
+        /// We also validate if the arguments are correctly structured.
+        /// Only the input file is required, the others are optional.
+        /// </summary>
+        /// <param name="args">The arguments to structure.</param>
+        /// <returns>A <see cref="CommandLineArguments"/> object with all of the passed and 
+        /// non-passed arguments structured.</returns>
         private CommandLineArguments formatArgs(string[] args) 
         {
             if (args.Length < 1) throw new InvalidInputFileException();
@@ -89,5 +134,15 @@ namespace SSync.CommandLine
 
             return commandLineArguments;
         }
+
+        /// <summary>
+        /// Returns the <see cref="CommandLineArguments"/> object with all of the passed and non-passed arguments structured.
+        /// This is just a getter, because `.formatArgs()` is a private method.
+        /// </summary>
+        public CommandLineArguments getArgs()
+        {
+            return _args;
+        }
     }
+    
 }

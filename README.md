@@ -1,4 +1,51 @@
 # Mindminers Backend Challenge
 ## SSYNC
-This is a program that is supposed to be used either 
-test for mindminers role
+The SubRip (.srt) format of subtitle files for movies has become quite popular in recent years, among other reasons for its simplicity.
+
+Here is a brief explanation of the format: It contain formatted lines of plain text in groups separated by a blank line. The subtitles are numbered sequentially, starting at 1. The timecode used is hours:minutes:seconds, milliseconds with time units fixed to two digits with leading zero padding, and fractions fixed to three digits also padded by leading zeros (00:00:00,000). The fractional separator used is the comma, as the program was written in France.
+
+##### Example
+> > 168 
+> > 00:20:41,150 --> 00:20:45,109 
+> > - How did he do that? 
+> > - Made him an offer he couldn't refuse.
+
+### Motivation
+A Common problem users face with this format are the following:
+
+- The subtitles does not sync well with the content being played.
+- The subtitles have a wrong text in them.
+
+### Solution
+To solve this issue i've developed SSync. This is not only just a CLI command, but it has the ideal of becoming a tool for subtitles management and creation.
+
+That's why that this has the ideal of being able to be used either as a CLI or a library inside of your own projects. This way you can edit and interact with it programatically with code without the need to run the same commands everytime.
+
+## How to use
+
+#### Programatically
+
+```cs
+using SSync;
+
+string[] subtitleFiles = new string[] { "gots1e1.srt", "gots1e2.srt", "gots1e3.srt", "gots1e4.srt"}
+SSyncClient client = new SSyncClient();
+foreach(string file in subtitleFiles)
+{
+    client.loadFile(file);
+    client.applyChanges(
+        hoursOffset: 20
+    );
+    client.changesState.offset.minute = -10;
+    client.saveFile("output.srt");
+}
+```
+
+#### CLI
+
+```bash
+$ dotnet run "subtitle.srt" --o "changes-test.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
+```
+
+This will read the `subtitle.srt` file and output the changes to `changes-test.srt` file. It will subtract 10 seconds from the timestamps and replace "nQo" occurrences to "não" and "NQo" to "Não".
+

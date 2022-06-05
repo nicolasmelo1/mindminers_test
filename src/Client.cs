@@ -1,7 +1,9 @@
 using SSync.Parse;
 
-namespace SSync {
-    public class InvalidSaveFileException : Exception {
+namespace SSync 
+{
+    public class InvalidSaveFileException : Exception 
+    {
         public InvalidSaveFileException() : base("You should try to call `loadFile` before trying to save a file") { }
     }
 
@@ -9,7 +11,8 @@ namespace SSync {
     /// Used for holding the offsets data. It holds everything separated in hours, minutes, seconds and milliseconds,
     /// but when it needs to be used it is converted to milliseconds using the `inMilliseconds()` method.
     /// </summary>
-    public class Offset {
+    public class Offset 
+    {
         public long hour = 0;
         public long minute = 0;
         public long second = 0;
@@ -27,7 +30,8 @@ namespace SSync {
         ///     </code>
         /// </example>
         /// </summary>
-        public Offset(long hour, long minute, long second, long millisecond) {
+        public Offset(long hour, long minute, long second, long millisecond) 
+        {
             this.hour = hour;
             this.minute = minute;
             this.second = second;
@@ -47,7 +51,8 @@ namespace SSync {
         ///     </code>
         /// </example>
         /// </summary>
-        public long inMilliseconds() {
+        public long inMilliseconds() 
+        {
             return (hour * 60 * 60 + minute * 60 + second) * 1000 + millisecond;
         }
     }
@@ -79,7 +84,8 @@ namespace SSync {
         /// <param name="millisecondsOffset">The milliseconds offset to be used when generating the timestamps of the new file.</param>
         /// <param name="replacements">The replacements to make in the subtitle output. 
         /// It should follow the { valueToReplaceInOriginal, valueToReplaceWith } format.</param>
-        public ChangesState(long hoursOffset=0, long minutesOffset=0, long secondsOffset=0, long millisecondsOffset=0, string[][]? replacements=null)
+        public ChangesState(long hoursOffset=0, long minutesOffset=0, long secondsOffset=0, 
+            long millisecondsOffset=0, string[][]? replacements=null) 
         {
             this.offset = new Offset(hoursOffset, minutesOffset, secondsOffset, millisecondsOffset);
             this.subtitleChanges = new Dictionary<string, string>();
@@ -100,11 +106,11 @@ namespace SSync {
     /// Be aware that this loads the file into memory lazily, so this means we will only effectively load each Snippet of the subtitle 
     /// once we need it.
     /// </summary> 
-    public class Client 
+    public class SSyncClient 
     {
         private Snippet? _rootSnippet = null;
         public ChangesState? changesState = null;
-        public Client() { }
+        public SSyncClient() { }
 
         /// <summary>
         /// Load the file into memory and initializes the parser and the lexer. So we can parse the contents lazily. Retrieve only the first 
@@ -148,9 +154,12 @@ namespace SSync {
         /// <param name="millisecondsOffset">The number of milliseconds to add (or subtract) from the timestamp</param>
         /// <param name="replacements">The replacements to make in the subtitle output. 
         /// It should follow the { valueToReplaceInOriginal, valueToReplaceWith } format</param>
-        public void applyChanges(long hoursOffset=0, long minutesOffset=0, long secondsOffset=0, long millisecondsOffset=0, string[][]? replacements=null) 
+        public void applyChanges(long hoursOffset=0, long minutesOffset=0, long secondsOffset=0, 
+        long millisecondsOffset=0, string[][]? replacements=null) 
         {
-            this.changesState = new ChangesState(hoursOffset, minutesOffset, secondsOffset, millisecondsOffset, replacements);
+            this.changesState = new ChangesState(
+                hoursOffset, minutesOffset, secondsOffset, millisecondsOffset, replacements
+            );
         }
 
         /// <summary>

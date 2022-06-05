@@ -45,16 +45,16 @@ foreach(string file in subtitleFiles)
 #### CLI
 
 ```bash
-$ dotnet run --project ./SSync "subtitle.srt" --o "output.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
+$ dotnet run --project ./SSync "examples/subtitle.srt" --o "examples/output.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
 ```
 or
 ```bash
 $ cd ./SSync
-$ dotnet run "../subtitle.srt" --o "../output.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
+$ dotnet run "../examples/subtitle.srt" --o "../examples/output.srt" --s -10 --r "nQo":"não" --r "NQo":"Não"  
 ```
 or
 ```bash
-$ dotnet run --project ./SSync "subtitle.srt" --output "output.srt" --seconds -10 --replacements "nQo":"não" --replacements "NQo":"Não"  
+$ dotnet run --project ./SSync "examples/subtitle.srt" --output "examples/output.srt" --seconds -10 --replacements "nQo":"não" --replacements "NQo":"Não"  
 ```
 
 This will read the `subtitle.srt` file and output the changes to `changes-test.srt` file. It will subtract 10 seconds from the timestamps and replace "nQo" occurrences to "não" and "NQo" to "Não".
